@@ -1,0 +1,41 @@
+COMANDOS PARA CREAR CONTENEDORES Y NUESTRAS IMAGENES.
+1.- Creamos un directorio.
+		El mio esta en /home/prueba_cuatro/
+		
+2.-Descargamos desde git nuestra aplicación.
+		Previamente la hemos subido y ahora la bajamos a nuestro directorio.
+		Hemos utilizado, - git clone https://github.com/LeninCordova/proyectPHP.git
+		
+3.-Luego descargamos nuestras imagenes desde docker-hub
+		Las que voy a utilzar son:
+			Imagen de mysql: - docker pull mysql:5.7
+			Imagen de apche y php: - docker pull php:7.0-apache
+			
+4.-Luego vamos a crear nuestros contenedores.
+		Primero tenemos que crear nuestro contenedor de mysql.
+		- docker run -d -p 3306:3306 --name mysql_57 -v /home/prueba_tres/db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=12345 mysql:5.7 
+		Luego nuestro contenedor php y apache.
+		- docker run -d -p 80:80 --name web -v /home/prueba_tres/wed/html:/var/www/html:Z  --link db:db php:7.0-apache
+		
+5.-Despues de a ver creado nuestro contenedor entraremos a el de mysql`para crear nuestra base de datos.
+		Docker exec -it [id de contenedor] bash
+		- creando nuestra base de datos:
+			mysql -u root -p = utilizamos la clave que le hemos proporcionado en este caso (12345).
+			-CREATE DATABASES [NOMBRE DE LA BASE DE DATOS];
+			-CREATE TABLE [NOMBRE DE LA TABLA]
+			(
+				nombre varchar(30),
+				apellido varchar (30),
+				email varchar (30),
+			);
+6.-Luego descargaremos las extenciones.
+		docker exec -it web docker-php-ext-install mysqli pdo
+		docker exec -it web docker-php-ext-enable mysqli pdo
+7.-Restauramos nuestro contenedor.
+		docker restart web
+
+8.-Despues nos conectamos con nuestro navegador por el puerto que hallamos dado a nuestro contenecdor.
+
+NOTA: 
+Cuando hallamos creado nuestra base de datos, tendremos que colocar el nombre de dicha base de datos a nuestro archivo de 
+conexión de nuestra aplicación, como su tabla, etc.
